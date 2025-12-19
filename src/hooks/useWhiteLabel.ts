@@ -9,13 +9,13 @@ export interface WhiteLabelSettings {
   logoUrl: string | null;
   faviconUrl: string | null;
   hideLogoIcon: boolean;
-  
+
   // Main Colors
   primaryColor: string;
   successColor: string;
   warningColor: string;
   dangerColor: string;
-  
+
   // Extended Colors
   backgroundColor: string;
   foregroundColor: string;
@@ -26,14 +26,14 @@ export interface WhiteLabelSettings {
   accentColor: string;
   accentForegroundColor: string;
   borderColor: string;
-  
+
   // Typography
   fontFamily: string;
   customFontUrl: string | null;
-  
+
   // Theme
   defaultTheme: "light" | "dark" | "system";
-  
+
   // PWA
   pwaIconUrl: string | null;
   pwaThemeColor: string;
@@ -170,17 +170,17 @@ export const WHITE_LABEL_TEMPLATES = [
 ];
 
 export const DEFAULT_WHITE_LABEL: WhiteLabelSettings = {
-  appName: "Launx Metrics",
+  appName: "Metrics Hubibi",
   appTagline: "Dashboard de análise de Meta Ads e Leads",
   logoUrl: null,
   faviconUrl: null,
   hideLogoIcon: false,
-  
+
   primaryColor: "217 91% 60%",
   successColor: "142 71% 45%",
   warningColor: "38 92% 50%",
   dangerColor: "0 84% 60%",
-  
+
   backgroundColor: "240 10% 3.9%",
   foregroundColor: "0 0% 98%",
   cardColor: "240 10% 3.9%",
@@ -190,12 +190,12 @@ export const DEFAULT_WHITE_LABEL: WhiteLabelSettings = {
   accentColor: "240 3.7% 15.9%",
   accentForegroundColor: "0 0% 98%",
   borderColor: "240 3.7% 15.9%",
-  
+
   fontFamily: "Inter",
   customFontUrl: null,
-  
+
   defaultTheme: "system",
-  
+
   pwaIconUrl: null,
   pwaThemeColor: "217 91% 60%",
   pwaBackgroundColor: "240 10% 3.9%",
@@ -273,7 +273,7 @@ export function useWhiteLabel() {
   const updateSettings = useCallback(async (newSettings: Partial<WhiteLabelSettings>): Promise<boolean> => {
     try {
       const merged = { ...settings, ...newSettings };
-      
+
       const { error } = await supabase
         .from("app_settings")
         .upsert({
@@ -286,7 +286,7 @@ export function useWhiteLabel() {
 
       setSettings(merged);
       setCachedSettings(merged);
-      
+
       toast({
         title: "Configurações salvas",
         description: "As configurações de white label foram atualizadas.",
