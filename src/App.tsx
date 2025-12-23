@@ -18,6 +18,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { SkipToContent } from "@/components/SkipToContent";
 import { KeyboardShortcutsHelp } from "@/components/KeyboardShortcutsHelp";
+import { logger } from "@/lib/logger";
 
 // Helper function to retry lazy imports with automatic reload on failure
 const lazyWithRetry = <T extends ComponentType<any>>(
@@ -27,7 +28,7 @@ const lazyWithRetry = <T extends ComponentType<any>>(
     try {
       return await componentImport();
     } catch (error) {
-      console.error('Failed to load module, reloading page...', error);
+      logger.error('Failed to load module, reloading page...', error);
       window.location.reload();
       return { default: (() => null) as unknown as T };
     }
@@ -40,7 +41,22 @@ const Admin = lazyWithRetry(() => import("./pages/Admin"));
 const Auth = lazyWithRetry(() => import("./pages/Auth"));
 const NotFound = lazyWithRetry(() => import("./pages/NotFound"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes - data considered fresh
+      gcTime: 10 * 60 * 1000, // 10 minutes - cache time (formerly cacheTime)
+      refetchOnWindowFocus: false, // Disable refetch on window focus for better UX
+      refetchOnReconnect: true, // Refetch when reconnecting
+      retry: 1, // Only retry failed requests once
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
+    },
+    mutations: {
+      retry: 1,
+      retryDelay: 1000,
+    },
+  },
+});
 
 // Page loading fallback
 const PageLoader = () => (
@@ -56,7 +72,7 @@ const PageLoader = () => (
 
 const AppContent = () => {
   const { isOnline, wasOffline, dismissReconnected } = useOnlineStatus();
-  
+
   // Track user presence for online status
   useUserPresence();
 
@@ -74,19 +90,19 @@ const AppContent = () => {
 
       {/* Background Mesh */}
       <div className="fixed inset-0 bg-mesh pointer-events-none" />
-      
+
       {/* Decorative Blobs */}
       <div className="blob blob-primary w-[500px] h-[500px] -top-48 -right-48 opacity-30" />
       <div className="blob blob-accent w-[400px] h-[400px] top-1/3 -left-48 opacity-20" />
       <div className="blob blob-success w-[350px] h-[350px] bottom-0 right-1/4 opacity-20" />
-      
+
       {/* PWA Components */}
       <InstallPWAPrompt />
       <NotificationPermissionBanner />
-      
+
       {/* Keyboard Shortcuts Help Modal */}
       <KeyboardShortcutsHelp />
-      
+
       <div id="main-content" className="relative z-10 pb-16 md:pb-0">
         <Suspense fallback={<PageLoader />}>
           <Routes>
@@ -119,10 +135,10 @@ const AppContent = () => {
           </Routes>
         </Suspense>
       </div>
-      
+
       {/* Bottom Navigation - Mobile Only */}
       <BottomNav />
-      
+
       {/* Scroll to Top Button */}
       <ScrollToTop />
     </>

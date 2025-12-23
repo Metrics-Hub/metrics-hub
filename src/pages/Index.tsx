@@ -34,6 +34,7 @@ import { SalesFunnelChart } from "@/components/charts";
 import { useAcquisitionFunnel, getConversionRate } from "@/hooks/useFunnelData";
 import { ConversionKPICards } from "@/components/ConversionKPICards";
 import { useAuth } from "@/hooks/useAuth";
+import { logger } from "@/lib/logger";
 
 
 export default function Index() {
@@ -267,7 +268,7 @@ export default function Index() {
     if (!filtersLoading && dateRangeKey && user) {
       // Clear cache if date range actually changed
       if (prevDateRangeKeyRef.current && prevDateRangeKeyRef.current !== dateRangeKey) {
-        console.log('Date range changed, clearing cache:', prevDateRangeKeyRef.current, '->', dateRangeKey);
+        logger.debug('Date range changed, clearing cache:', prevDateRangeKeyRef.current, '->', dateRangeKey);
         localStorage.removeItem('meta_ads_cache');
         localStorage.removeItem('meta_ads_comparison_cache');
         localStorage.removeItem('google_ads_cache');

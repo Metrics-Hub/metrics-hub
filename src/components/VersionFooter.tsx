@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ChangelogDialog } from "@/components/ChangelogDialog";
 import { cn } from "@/lib/utils";
+import { logger } from "@/lib/logger";
 
 interface VersionFooterProps {
     className?: string;
@@ -23,10 +24,10 @@ export function VersionFooter({ className, variant = "footer" }: VersionFooterPr
         updateServiceWorker,
     } = useRegisterSW({
         onRegistered(r) {
-            console.log('SW Registered: ' + r);
+            logger.debug('SW Registered: ' + r);
         },
         onRegisterError(error) {
-            console.log('SW registration error', error);
+            logger.error('SW registration error', error);
         },
     });
 

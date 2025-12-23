@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { logger } from '@/lib/logger';
 
 type NotificationPermission = 'default' | 'granted' | 'denied';
 
@@ -30,7 +31,7 @@ export function useNotifications() {
       setPermission(result);
       return result === 'granted';
     } catch (error) {
-      console.error('Error requesting notification permission:', error);
+      logger.error('Error requesting notification permission:', error);
       return false;
     }
   }, [isSupported]);
@@ -38,7 +39,7 @@ export function useNotifications() {
   const showNotification = useCallback(
     ({ title, body, icon = '/icons/icon-192x192.png', tag, requireInteraction = false, onClick }: NotificationOptions) => {
       if (!isSupported || permission !== 'granted') {
-        console.log('Notifications not available or not permitted');
+        logger.debug('Notifications not available or not permitted');
         return null;
       }
 
@@ -61,7 +62,7 @@ export function useNotifications() {
 
         return notification;
       } catch (error) {
-        console.error('Error showing notification:', error);
+        logger.error('Error showing notification:', error);
         return null;
       }
     },

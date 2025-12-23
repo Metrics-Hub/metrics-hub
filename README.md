@@ -1,73 +1,159 @@
-# Welcome to your Lovable project
+# Metrics Hub
 
-## Project info
+A modern, full-featured marketing analytics dashboard for tracking and analyzing advertising campaigns across multiple platforms (Meta Ads, Google Ads) with lead management and real-time insights.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🚀 Features
 
-## How can I edit this code?
+- **Multi-Platform Analytics**: Unified dashboard for Meta Ads and Google Ads campaigns
+- **Lead Management**: Comprehensive lead tracking with qualification scoring and distributions
+- **Real-Time Insights**: AI-powered insights and smart alerts for campaign performance
+- **PWA Support**: Installable progressive web app with offline capabilities
+- **White Label**: Customizable branding and theming
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Dark Mode**: Built-in theme switching
+- **Advanced Filtering**: Filter campaigns by status, objective, date range with comparison mode
+- **Data Visualization**: Interactive charts and graphs powered by Recharts
+- **User Management**: Role-based access control with admin panel
 
-There are several ways of editing your application.
+## 📋 Prerequisites
 
-**Use Lovable**
+- Node.js 18+ and npm
+- Supabase account (for backend and authentication)
+- Meta Ads and/or Google Ads integration credentials
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 🛠️ Installation
 
-Changes made via Lovable will be committed automatically to this repo.
+### 1. Clone the repository
 
-**Use your preferred IDE**
+```bash
+git clone https://github.com/Metrics-Hub/metrics-hub.git
+cd metrics-hub
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 2. Install dependencies
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+npm install
+```
 
-Follow these steps:
+### 3. Environment Setup
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Copy the `.env.example` file to `.env` and fill in your Supabase credentials:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+```bash
+cp .env.example .env
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+Edit `.env` with your actual values:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```env
+VITE_SUPABASE_PROJECT_ID=your_project_id
+VITE_SUPABASE_PUBLISHABLE_KEY=your_publishable_key
+VITE_SUPABASE_URL=https://your_project_id.supabase.co
+```
+
+> ⚠️ **Important**: Never commit the `.env` file to version control. It contains sensitive credentials.
+
+### 4. Start the development server
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📦 Build for Production
 
-**Use GitHub Codespaces**
+```bash
+npm run build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The production-ready files will be in the `dist` directory.
 
-## What technologies are used for this project?
+### Preview production build
 
-This project is built with:
+```bash
+npm run preview
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🧪 Development
 
-## How can I deploy this project?
+### Project Structure
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+```
+metrics-hub/
+├── src/
+│   ├── components/     # React components
+│   ├── hooks/          # Custom React hooks
+│   ├── pages/          # Page components
+│   ├── lib/            # Utility functions and helpers
+│   ├── integrations/   # External service integrations
+│   └── config/         # Configuration files
+├── supabase/           # Supabase functions and migrations
+├── public/             # Static assets
+└── scripts/            # Build and utility scripts
+```
 
-## Can I connect a custom domain to my Lovable project?
+### Code Quality
 
-Yes, you can!
+The project uses:
+- **TypeScript** with strict mode enabled
+- **ESLint** for code linting
+- **Custom Logger** for environment-aware logging (dev vs production)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Run linting:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```bash
+npm run lint
+```
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run build:dev` - Build for development
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## 🔧 Technologies
+
+- **Frontend**: React 18, TypeScript, Vite
+- **UI Framework**: shadcn/ui, Radix UI, TailwindCSS
+- **State Management**: React Query (TanStack Query)
+- **Routing**: React Router v6
+- **Charts**: Recharts
+- **Backend**: Supabase (PostgreSQL, Edge Functions, Auth)
+- **PWA**: Vite PWA Plugin
+
+## 🔐 Authentication
+
+The application uses Supabase Authentication. Users must sign in to access the dashboard. Admin users have additional privileges for user management and system configuration.
+
+## 📊 Integrations
+
+### Meta Ads
+Configure Meta Ads integration in the Admin panel to sync campaign data.
+
+### Google Ads
+Set up Google Sheets integration for Google Ads data import.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is proprietary software. All rights reserved.
+
+## 🆘 Support
+
+For support, please contact the development team or open an issue in the repository.
+
+---
+
+**Version**: 0.1.0  
+**Last Updated**: December 2025
