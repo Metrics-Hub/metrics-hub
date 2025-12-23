@@ -230,6 +230,7 @@ export default function Leads() {
   const incomeData = data?.distributions?.income || [];
   const objectionData = data?.distributions?.objection || [];
   const socialNetworkData = data?.distributions?.socialNetwork || [];
+  const objectiveData = data?.distributions?.objective || [];
   const calculatedScoringData = useMemo(() => {
     const rawData = data?.distributions?.calculatedScoring || [];
     return rawData.map((item: { name: string; value: number; color?: string }) => ({
@@ -426,102 +427,119 @@ export default function Leads() {
             />
           </section>
 
+
           {/* Section: Origem dos Leads */}
-          <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: "250ms" }}>
-            <BarChart3 className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold">Origem dos Leads</h2>
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: "250ms" }}>
+              <BarChart3 className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-semibold">Origem dos Leads</h2>
+            </div>
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+              <TimelineAreaChart
+                title="Evolução de Cadastros"
+                data={formattedTimeline}
+                height={250}
+                color="hsl(var(--chart-1))"
+                loading={isLoading}
+                delay={300}
+              />
+              <DistributionBarChart
+                title="Leads por UTM Source"
+                data={utmSourceData}
+                height={250}
+                color="hsl(var(--chart-2))"
+                labelWidth={100}
+                loading={isLoading}
+                delay={350}
+              />
+            </section>
           </div>
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
-            <TimelineAreaChart
-              title="Evolução de Cadastros"
-              data={formattedTimeline}
-              height={250}
-              color="hsl(var(--chart-1))"
-              loading={isLoading}
-              delay={300}
-            />
-            <DistributionBarChart
-              title="Leads por UTM Source"
-              data={utmSourceData}
-              height={250}
-              color="hsl(var(--chart-2))"
-              labelWidth={100}
-              loading={isLoading}
-              delay={350}
-            />
-          </section>
+
+          {/* Divider */}
+          <div className="h-px bg-border/50" />
 
           {/* Section: Funil de Qualificação */}
-          <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: "275ms" }}>
-            <Target className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold">Funil de Qualificação</h2>
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: "275ms" }}>
+              <Target className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-semibold">Funil de Qualificação</h2>
+            </div>
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+              <SalesFunnelChart
+                title="Pipeline de Leads"
+                icon={<Target className="h-4 w-4 text-primary" />}
+                data={qualificationFunnelData}
+                height={260}
+                showConversionRates
+                loading={isLoading}
+                delay={300}
+              />
+              <QualificationMetricsPanel
+                totalLeads={data?.kpis?.total || 0}
+                withSurvey={data?.kpis?.withSurvey || 0}
+                qualified={Math.round((data?.kpis?.hotLeadsCount || 0) * 2)}
+                hotLeads={data?.kpis?.hotLeadsCount || 0}
+                surveyRate={data?.kpis?.surveyRate || 0}
+                qualificationRate={data?.kpis?.withSurvey ? getConversionRate(Math.round((data?.kpis?.hotLeadsCount || 0) * 2), data.kpis.withSurvey) : 0}
+                hotLeadRate={data?.kpis?.hotLeadsRate || 0}
+                loading={isLoading}
+                delay={350}
+              />
+            </section>
           </div>
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
-            <SalesFunnelChart
-              title="Pipeline de Leads"
-              icon={<Target className="h-4 w-4 text-primary" />}
-              data={qualificationFunnelData}
-              height={260}
-              showConversionRates
-              loading={isLoading}
-              delay={300}
-            />
-            <QualificationMetricsPanel
-              totalLeads={data?.kpis?.total || 0}
-              withSurvey={data?.kpis?.withSurvey || 0}
-              qualified={Math.round((data?.kpis?.hotLeadsCount || 0) * 2)}
-              hotLeads={data?.kpis?.hotLeadsCount || 0}
-              surveyRate={data?.kpis?.surveyRate || 0}
-              qualificationRate={data?.kpis?.withSurvey ? getConversionRate(Math.round((data?.kpis?.hotLeadsCount || 0) * 2), data.kpis.withSurvey) : 0}
-              hotLeadRate={data?.kpis?.hotLeadsRate || 0}
-              loading={isLoading}
-              delay={350}
-            />
-          </section>
+
+          {/* Divider */}
+          <div className="h-px bg-border/50" />
 
           {/* Section: Qualidade por Origem */}
-          <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: "300ms" }}>
-            <Target className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold">Qualidade dos Leads por Origem</h2>
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: "300ms" }}>
+              <Target className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-semibold">Qualidade dos Leads por Origem</h2>
+            </div>
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+              <StackedBarChart
+                title="Score por Conjunto"
+                icon={<BarChart3 className="h-4 w-4 text-primary" />}
+                data={scoreByAdSetData}
+                height={280}
+                loading={isLoading}
+                delay={375}
+                labelWidth={140}
+                maxLabelChars={22}
+                maxItems={8}
+              />
+              <StackedBarChart
+                title="Score por Anúncio"
+                icon={<BarChart3 className="h-4 w-4 text-primary" />}
+                data={scoreByAdData}
+                height={280}
+                loading={isLoading}
+                delay={425}
+                labelWidth={140}
+                maxLabelChars={22}
+                maxItems={8}
+              />
+            </section>
           </div>
-          <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
-            <StackedBarChart
-              title="Score por Conjunto"
-              icon={<BarChart3 className="h-4 w-4 text-primary" />}
-              data={scoreByAdSetData}
-              height={280}
-              loading={isLoading}
-              delay={375}
-              labelWidth={140}
-              maxLabelChars={22}
-              maxItems={8}
-            />
-            <StackedBarChart
-              title="Score por Anúncio"
-              icon={<BarChart3 className="h-4 w-4 text-primary" />}
-              data={scoreByAdData}
-              height={280}
-              loading={isLoading}
-              delay={425}
-              labelWidth={140}
-              maxLabelChars={22}
-              maxItems={8}
-            />
-          </section>
+
+          {/* Divider */}
+          <div className="h-px bg-border/50" />
 
           {/* Section: Análise da Pesquisa */}
-          <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: "450ms" }}>
-            <ClipboardList className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold">Análise da Pesquisa</h2>
-          </div>
-          <section className="space-y-6">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 animate-fade-in" style={{ animationDelay: "450ms" }}>
+              <ClipboardList className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-semibold">Análise da Pesquisa</h2>
+            </div>
+
             {/* Subsection: Perfil Demográfico */}
             <div className="p-5 bg-muted/30 rounded-lg border border-border/50 space-y-4">
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-primary" />
                 <h4 className="text-base font-medium">Perfil Demográfico</h4>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 items-stretch">
                 <DistributionPieChart
                   title="Gênero"
                   data={genderData}
@@ -551,8 +569,6 @@ export default function Leads() {
                   loading={isLoading}
                   delay={500}
                 />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
                 <DistributionPieChart
                   title="Estado Civil"
                   data={maritalStatusData}
@@ -614,7 +630,7 @@ export default function Leads() {
                 <MessageCircle className="h-4 w-4 text-primary" />
                 <h4 className="text-base font-medium">Engajamento & Comportamento</h4>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 gap-4 items-stretch">
                 <DistributionBarChart
                   title="Rede Social"
                   data={socialNetworkData}
@@ -635,6 +651,17 @@ export default function Leads() {
                   loading={isLoading}
                   delay={800}
                 />
+                <DistributionBarChart
+                  title="Objetivo"
+                  data={objectiveData}
+                  height={220}
+                  color="hsl(var(--chart-3))"
+                  labelWidth={140}
+                  labelFontSize={11}
+                  maxLabelChars={25}
+                  loading={isLoading}
+                  delay={850}
+                />
                 <DistributionPieChart
                   title="Score Calculado"
                   data={calculatedScoringData}
@@ -644,8 +671,6 @@ export default function Leads() {
                   loading={isLoading}
                   delay={850}
                 />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
                 <DistributionBarChart
                   title="Tempo Acompanhando"
                   data={followTimeData}
@@ -670,7 +695,10 @@ export default function Leads() {
                 />
               </div>
             </div>
-          </section>
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-border/50" />
 
           {/* Leads Table */}
           <section className="animate-fade-in" style={{ animationDelay: "850ms" }}>

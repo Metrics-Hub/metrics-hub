@@ -61,11 +61,11 @@ export function ChartsSection({
   dateTo,
 }: ChartsSectionProps) {
   return (
-    <>
-      {/* Goal Projection Chart */}
+    <div className="space-y-6">
+      {/* Goal Projection Chart - Full Width (Most Important) */}
       <section className="animate-fade-in" style={{ animationDelay: "525ms" }}>
-        <GoalProjectionChart 
-          sparklineData={sparklineData} 
+        <GoalProjectionChart
+          sparklineData={sparklineData}
           monthlyGoal={goalSettings.monthlyGoal}
           loading={isLoading}
           projectName={projectName}
@@ -88,25 +88,26 @@ export function ChartsSection({
         />
       </section>
 
-      {/* Timeline Chart */}
-      <section className="animate-fade-in" style={{ animationDelay: "550ms" }}>
-        <TimelineChart data={sparklineData} loading={isLoading} />
-      </section>
+      {/* Timeline & Efficiency Charts - Side by Side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <section className="animate-fade-in" style={{ animationDelay: "550ms" }}>
+          <TimelineChart data={sparklineData} loading={isLoading} />
+        </section>
 
-      {/* Efficiency Trend Chart */}
-      <section className="animate-fade-in" style={{ animationDelay: "575ms" }}>
-        <EfficiencyTrendChart data={sparklineData} loading={isLoading} />
-      </section>
+        <section className="animate-fade-in" style={{ animationDelay: "575ms" }}>
+          <EfficiencyTrendChart data={sparklineData} loading={isLoading} />
+        </section>
+      </div>
 
-      {/* Performance Chart */}
+      {/* Performance Chart - Full Width */}
       <section className="animate-fade-in" style={{ animationDelay: "600ms" }}>
-        <PerformanceChart 
-          data={chartData} 
+        <PerformanceChart
+          data={chartData}
           loading={isLoading}
           metric1={chartMetrics.metric1}
           metric2={chartMetrics.metric2}
         />
       </section>
-    </>
+    </div>
   );
 }

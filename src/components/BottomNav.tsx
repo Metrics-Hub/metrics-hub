@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { VersionFooter } from "@/components/VersionFooter";
 
 interface NavItem {
   path: string;
@@ -41,7 +42,7 @@ export function BottomNav() {
       <div className="flex items-center justify-around h-14 px-2">
         {visibleItems.map((item) => {
           const isActive = location.pathname === item.path;
-          
+
           return (
             <button
               key={item.path}
@@ -50,8 +51,8 @@ export function BottomNav() {
                 "flex flex-col items-center justify-center gap-0.5 flex-1 h-full px-2 transition-all duration-200",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-lg",
                 "min-w-[56px] active:scale-95",
-                isActive 
-                  ? "text-primary" 
+                isActive
+                  ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
@@ -93,8 +94,8 @@ export function BottomNav() {
               <span className="text-[10px] font-medium">Mais</span>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent 
-            align="end" 
+          <DropdownMenuContent
+            align="end"
             side="top"
             className="w-48 mb-2 bg-popover border-border"
           >
@@ -102,6 +103,9 @@ export function BottomNav() {
               <span>Tema</span>
               <ThemeToggle />
             </DropdownMenuItem>
+            <div className="px-2 py-2 border-t border-border">
+              <VersionFooter variant="badge" className="w-full justify-center" />
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

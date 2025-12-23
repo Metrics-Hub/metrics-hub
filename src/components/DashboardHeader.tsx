@@ -11,6 +11,7 @@ import { DataSourceBadge } from "@/components/DataSourceBadge";
 import { DataSources } from "@/components/DataSourceSelector";
 import { useWhiteLabelContext } from "@/components/WhiteLabelProvider";
 import { DashboardSectionToggles, SectionVisibility } from "@/components/DashboardSectionToggles";
+import { VersionFooter } from "@/components/VersionFooter";
 
 interface DashboardHeaderProps {
   projects?: Project[];
@@ -50,9 +51,9 @@ export function DashboardHeader({
           <Link to="/" className="flex items-center gap-2 group">
             {whiteLabelSettings.logoUrl ? (
               <>
-                <img 
-                  src={whiteLabelSettings.logoUrl} 
-                  alt={whiteLabelSettings.appName} 
+                <img
+                  src={whiteLabelSettings.logoUrl}
+                  alt={whiteLabelSettings.appName}
                   className="h-7 md:h-8 max-w-24 md:max-w-32 object-contain transition-transform group-hover:scale-105"
                 />
                 {!whiteLabelSettings.hideLogoIcon && (
@@ -83,10 +84,10 @@ export function DashboardHeader({
           {/* Data Source Badge - Hidden on mobile */}
           {dataSources && dataSources.length > 0 && (hasMetaAds || hasGoogleAds) && (
             <div className="hidden md:block">
-              <DataSourceBadge 
-                dataSources={dataSources} 
-                hasMetaAds={hasMetaAds} 
-                hasGoogleAds={hasGoogleAds} 
+              <DataSourceBadge
+                dataSources={dataSources}
+                hasMetaAds={hasMetaAds}
+                hasGoogleAds={hasGoogleAds}
               />
             </div>
           )}
@@ -159,6 +160,7 @@ export function DashboardHeader({
             />
           )}
           <div className="hidden sm:block h-6 w-px bg-border/50" />
+          <VersionFooter className="hidden md:flex" />
           <ThemeToggle />
           <UserMenu />
         </div>

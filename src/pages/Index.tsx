@@ -960,46 +960,58 @@ export default function Index() {
 
           {/* Smart Alerts - Admin only + toggle */}
           {isAdmin && sectionVisibility.smartAlerts && filteredTotals.leads > 0 && (
-            <SmartAlerts
-              currentCPL={alertMetrics.cpl}
-              maxCPL={alertMetrics.maxCPL}
-              currentCTR={alertMetrics.ctr}
-              currentSpend={alertMetrics.spend}
-              budgetLimit={alertMetrics.budgetLimit}
-              currentLeads={alertMetrics.leads}
-              expectedLeads={alertMetrics.expectedLeads}
-              goalLeads={alertMetrics.goalLeads}
-            />
+            <>
+              <div className="h-px bg-border/50" />
+              <SmartAlerts
+                currentCPL={alertMetrics.cpl}
+                maxCPL={alertMetrics.maxCPL}
+                currentCTR={alertMetrics.ctr}
+                currentSpend={alertMetrics.spend}
+                budgetLimit={alertMetrics.budgetLimit}
+                currentLeads={alertMetrics.leads}
+                expectedLeads={alertMetrics.expectedLeads}
+                goalLeads={alertMetrics.goalLeads}
+              />
+            </>
           )}
 
           {/* AI Insights - Admin only + toggle */}
           {isAdmin && sectionVisibility.aiInsights && filteredTotals.leads > 0 && (
-            <AIInsightsPanel data={aiInsightsData} />
+            <>
+              <div className="h-px bg-border/50" />
+              <AIInsightsPanel data={aiInsightsData} />
+            </>
           )}
 
           {/* Charts Section */}
           {sectionVisibility.charts && (
-            <ChartsSection
-              sparklineData={data?.sparklineData || []}
-              chartData={chartData}
-              chartMetrics={chartMetrics}
-              isLoading={isLoading}
-              projectName={activeProject?.name}
-              goalSettings={{
-                monthlyGoal: appSettings.periodGoals.monthly.leads,
-                campaignPeriod: campaignPeriodForCharts,
-              }}
-              leadsCampaignsTotals={leadsCampaignsTotals}
-              filteredTotals={filteredTotals}
-              leadsChange={changes?.leads}
-              spendChange={changes?.spend}
-              cplChange={changes?.cpl}
-              activeCampaigns={filteredCampaigns.filter(c => c.status === 'ACTIVE').length}
-              dataSources={dataSources}
-              dateFrom={data?.dateFrom}
-              dateTo={data?.dateTo}
-            />
+            <>
+              <div className="h-px bg-border/50" />
+              <ChartsSection
+                sparklineData={data?.sparklineData || []}
+                chartData={chartData}
+                chartMetrics={chartMetrics}
+                isLoading={isLoading}
+                projectName={activeProject?.name}
+                goalSettings={{
+                  monthlyGoal: appSettings.periodGoals.monthly.leads,
+                  campaignPeriod: campaignPeriodForCharts,
+                }}
+                leadsCampaignsTotals={leadsCampaignsTotals}
+                filteredTotals={filteredTotals}
+                leadsChange={changes?.leads}
+                spendChange={changes?.spend}
+                cplChange={changes?.cpl}
+                activeCampaigns={filteredCampaigns.filter(c => c.status === 'ACTIVE').length}
+                dataSources={dataSources}
+                dateFrom={data?.dateFrom}
+                dateTo={data?.dateTo}
+              />
+            </>
           )}
+
+          {/* Divider */}
+          <div className="h-px bg-border/50" />
 
           {/* Funnel Section */}
           {sectionVisibility.funnel && (
@@ -1029,6 +1041,9 @@ export default function Index() {
             </div>
           )}
 
+          {/* Divider */}
+          <div className="h-px bg-border/50" />
+
           {/* Rankings Section */}
           {sectionVisibility.rankings && (
             <RankingsSection
@@ -1045,6 +1060,9 @@ export default function Index() {
               isLoading={isLoading}
             />
           )}
+
+          {/* Divider */}
+          <div className="h-px bg-border/50" />
 
           {/* Ads Table */}
           {sectionVisibility.adsTable && (
