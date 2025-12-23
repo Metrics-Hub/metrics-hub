@@ -66,6 +66,7 @@ export interface LeadsDistributions {
   calculatedScoring: Distribution[];
   maritalStatus: Distribution[];
   profession: Distribution[];
+  objective: Distribution[];
   scoreByAdSet: ScoreBySource[];
   scoreByAd: ScoreBySource[];
 }
@@ -319,6 +320,7 @@ export function useLeadsData(dateRange: DateRange | undefined, integrationId?: s
           calculatedScoring: responseData.distributions?.scoreDistribution || [],
           maritalStatus: responseData.distributions?.maritalStatus || [],
           profession: responseData.distributions?.profession || [],
+          objective: responseData.distributions?.objective || [],
           scoreByAdSet: responseData.scoreByMedium || [],
           scoreByAd: responseData.scoreByContent || [],
         },
@@ -384,7 +386,7 @@ export function useLeadsData(dateRange: DateRange | undefined, integrationId?: s
             gender: [], age: [], region: [], utmSource: [], income: [],
             objection: [], socialNetwork: [], creditLimit: [], experience: [],
             followTime: [], leadScoring: [], calculatedScoring: [],
-            maritalStatus: [], profession: [], scoreByAdSet: [], scoreByAd: [],
+            maritalStatus: [], profession: [], objective: [], scoreByAdSet: [], scoreByAd: [],
           },
           timeline: [],
           sparklineData: [],
