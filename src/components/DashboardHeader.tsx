@@ -44,7 +44,7 @@ export function DashboardHeader({
 
   return (
     <header className="sticky top-0 z-50 w-full glass-header">
-      <div className="container flex h-14 md:h-16 items-center justify-between px-4">
+      <div className="w-full flex h-14 md:h-16 items-center justify-between px-4">
         {/* Logo and Navigation */}
         <div className="flex items-center gap-2 md:gap-6">
           <Link to="/" className="flex items-center gap-2 group">

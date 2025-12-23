@@ -18,10 +18,10 @@ export default function Admin() {
   const { user } = useAuth();
   const { isAdmin, loading: adminLoading } = useAdminCheck();
   const { projects, activeProject, setActiveProject, isLoading: projectsLoading } = useProjects();
-  const { 
-    users, 
-    loading: usersLoading, 
-    error, 
+  const {
+    users,
+    loading: usersLoading,
+    error,
     stats,
     searchQuery,
     setSearchQuery,
@@ -29,17 +29,17 @@ export default function Admin() {
     setRoleFilter,
     statusFilter,
     setStatusFilter,
-    refetch, 
-    updateUserRole, 
+    refetch,
+    updateUserRole,
     toggleUserActive,
     inviteUser,
     createUser,
     deleteUser,
     getUserLoginHistory,
   } = useAdminUsers();
-  const { 
-    settings, 
-    loading: settingsLoading, 
+  const {
+    settings,
+    loading: settingsLoading,
     updateLeadGoal,
     updatePeriodGoals,
     updateProgressAlerts,
@@ -62,12 +62,12 @@ export default function Admin() {
     <div className="min-h-screen bg-background bg-mesh">
       {/* Header */}
       <header className="glass-header sticky top-0 z-50 px-4 py-3 md:px-6">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
+        <div className="mx-auto flex w-full items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => navigate("/")}
                 className="h-8 w-8"
               >
@@ -90,7 +90,7 @@ export default function Admin() {
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 py-6 md:px-6">
+      <main className="mx-auto w-full px-4 py-6 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

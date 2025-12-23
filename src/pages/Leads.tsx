@@ -2,8 +2,8 @@ import { useMemo, useCallback, useEffect } from "react";
 import { DateRange } from "react-day-picker";
 import { subDays, format, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { 
-  Users, 
+import {
+  Users,
   TrendingUp,
   ClipboardList,
   Percent,
@@ -61,7 +61,7 @@ export default function Leads() {
   // Update document title
   useEffect(() => {
     document.title = "Leads - Launx Metrics";
-    
+
     return () => {
       document.title = "Launx Metrics";
     };
@@ -70,7 +70,7 @@ export default function Leads() {
   const { filters, updateFilters, resetFilters, isLoading: filtersLoading } = useLeadsFilters();
   const { projects, activeProject, setActiveProject, isLoading: projectsLoading } = useProjects();
   const { googleSheetsIntegrations } = useIntegrations(activeProject?.id || null);
-  
+
   // Get first active Google Sheets integration for current project
   const activeSheetsIntegration = useMemo(() => {
     return googleSheetsIntegrations.find(i => i.is_active) || googleSheetsIntegrations[0] || null;
@@ -173,23 +173,23 @@ export default function Leads() {
   // Filter leads by search term and filters
   const filteredLeads = useMemo(() => {
     if (!data?.leads) return [];
-    
+
     return data.leads.filter((lead) => {
       // Search filter
-      const matchesSearch = 
+      const matchesSearch =
         lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         lead.phone.includes(searchTerm);
-      
+
       // Tag filter
       const matchesTag = selectedTags.length === 0 || selectedTags.includes(lead.tag);
-      
+
       // Region filter
       const matchesRegion = selectedRegions.length === 0 || selectedRegions.includes(lead.region);
-      
+
       // UTM Source filter
       const matchesUtmSource = selectedUtmSources.length === 0 || selectedUtmSources.includes(lead.utmSource);
-      
+
       return matchesSearch && matchesTag && matchesRegion && matchesUtmSource;
     });
   }, [data?.leads, searchTerm, selectedTags, selectedRegions, selectedUtmSources]);
@@ -215,13 +215,13 @@ export default function Leads() {
   }, [data?.timeline]);
 
   // Prepare chart data with colors
-  const genderData = useMemo(() => 
-    addColorsToData(data?.distributions?.gender || []), 
+  const genderData = useMemo(() =>
+    addColorsToData(data?.distributions?.gender || []),
     [data?.distributions?.gender]
   );
-  
-  const regionData = useMemo(() => 
-    addColorsToData(data?.distributions?.region || []), 
+
+  const regionData = useMemo(() =>
+    addColorsToData(data?.distributions?.region || []),
     [data?.distributions?.region]
   );
 
@@ -237,14 +237,14 @@ export default function Leads() {
       color: item.color || 'hsl(var(--chart-1))'
     }));
   }, [data?.distributions?.calculatedScoring]);
-  const experienceData = useMemo(() => 
-    addColorsToData(data?.distributions?.experience || []), 
+  const experienceData = useMemo(() =>
+    addColorsToData(data?.distributions?.experience || []),
     [data?.distributions?.experience]
   );
   const creditLimitData = data?.distributions?.creditLimit || [];
   const followTimeData = data?.distributions?.followTime || [];
-  const maritalStatusData = useMemo(() => 
-    addColorsToData(data?.distributions?.maritalStatus || []), 
+  const maritalStatusData = useMemo(() =>
+    addColorsToData(data?.distributions?.maritalStatus || []),
     [data?.distributions?.maritalStatus]
   );
   const professionData = data?.distributions?.profession || [];
@@ -263,12 +263,12 @@ export default function Leads() {
     }));
   };
 
-  const scoreByAdSetData = useMemo(() => 
+  const scoreByAdSetData = useMemo(() =>
     transformScoreData(data?.distributions?.scoreByAdSet || []),
     [data?.distributions?.scoreByAdSet]
   );
 
-  const scoreByAdData = useMemo(() => 
+  const scoreByAdData = useMemo(() =>
     transformScoreData(data?.distributions?.scoreByAd || []),
     [data?.distributions?.scoreByAd]
   );
@@ -276,8 +276,8 @@ export default function Leads() {
   return (
     <PullToRefresh onRefresh={handlePullToRefresh}>
       <div className="min-h-screen bg-background">
-        <LoadingProgress 
-          isLoading={isLoading} 
+        <LoadingProgress
+          isLoading={isLoading}
           estimatedTime={5}
           message={`Carregando ${data?.totalCount ? 'mais ' : ''}leads...`}
         />
@@ -290,14 +290,14 @@ export default function Leads() {
 
         {/* Controls Bar - Refresh, DatePicker */}
         <div className="sticky top-16 z-40 w-full bg-background/95 backdrop-blur-sm border-b border-border/50">
-          <div className="container px-4 py-3 flex flex-wrap items-center justify-end gap-3">
+          <div className="w-full px-4 py-3 flex flex-wrap items-center justify-end gap-3">
             {activeFiltersCount > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={handleReset} 
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleReset}
                     className="gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
                   >
                     <RotateCcw className="h-4 w-4" />
@@ -343,12 +343,12 @@ export default function Leads() {
           </div>
         </div>
 
-        <main className="container px-4 py-6 space-y-6">
+        <main className="w-full px-4 py-6 space-y-6">
           {/* No Integration Alert */}
           {!isLoading && activeProject && !activeSheetsIntegration && (
-            <NoIntegrationAlert 
-              projectName={activeProject.name} 
-              integrationType="Google Sheets" 
+            <NoIntegrationAlert
+              projectName={activeProject.name}
+              integrationType="Google Sheets"
             />
           )}
 

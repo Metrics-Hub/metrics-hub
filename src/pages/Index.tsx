@@ -48,7 +48,7 @@ export default function Index() {
   useEffect(() => {
     const hasMeta = dataSources.includes("meta");
     const hasGoogle = dataSources.includes("google");
-    
+
     let title = "Dashboard - Launx Metrics";
     if (hasMeta && hasGoogle) {
       title = "Dashboard Combinado - Launx Metrics";
@@ -57,16 +57,16 @@ export default function Index() {
     } else if (hasGoogle) {
       title = "Dashboard Google Ads - Launx Metrics";
     }
-    
+
     document.title = title;
-    
+
     return () => {
       document.title = "Launx Metrics";
     };
   }, [dataSources]);
   const { projects, activeProject, setActiveProject, isLoading: projectsLoading } = useProjects();
   const { metaAdsIntegrations, googleAdsSheetsIntegrations } = useIntegrations(activeProject?.id || null);
-  
+
   // Get first active integration for each platform
   const activeMetaIntegration = useMemo(() => {
     return metaAdsIntegrations.find(i => i.is_active) || metaAdsIntegrations[0] || null;
@@ -80,22 +80,22 @@ export default function Index() {
   const shouldFetchMeta = dataSources.includes("meta");
   const shouldFetchGoogle = dataSources.includes("google");
 
-  const { 
-    data: metaData, 
-    comparisonData: metaComparisonData, 
-    isLoading: metaLoading, 
-    progress: metaProgress, 
-    fetchData: fetchMetaData, 
-    clearCache: clearMetaCache 
+  const {
+    data: metaData,
+    comparisonData: metaComparisonData,
+    isLoading: metaLoading,
+    progress: metaProgress,
+    fetchData: fetchMetaData,
+    clearCache: clearMetaCache
   } = useMetaAdsData(shouldFetchMeta ? activeMetaIntegration?.id : undefined);
 
-  const { 
-    data: googleData, 
-    comparisonData: googleComparisonData, 
-    isLoading: googleLoading, 
-    progress: googleProgress, 
-    fetchData: fetchGoogleData, 
-    clearCache: clearGoogleCache 
+  const {
+    data: googleData,
+    comparisonData: googleComparisonData,
+    isLoading: googleLoading,
+    progress: googleProgress,
+    fetchData: fetchGoogleData,
+    clearCache: clearGoogleCache
   } = useGoogleAdsData(shouldFetchGoogle ? activeGoogleAdsIntegration?.id : undefined);
 
   // Combined loading state
@@ -106,24 +106,24 @@ export default function Index() {
   const data = useMemo((): MetaAdsResponse | null => {
     const hasMeta = dataSources.includes("meta");
     const hasGoogle = dataSources.includes("google");
-    
+
     // Single source
     if (hasMeta && !hasGoogle) return metaData;
     if (hasGoogle && !hasMeta) return googleData;
-    
+
     // Combine both sources
     if (!metaData && !googleData) return null;
-    
+
     const metaCampaigns = metaData?.campaigns || [];
     const googleCampaigns = googleData?.campaigns || [];
-    
+
     // Combine campaigns - platform identified by visual badge in table
     const combinedCampaigns = [...metaCampaigns, ...googleCampaigns];
-    
+
     // Combine totals
     const metaTotals = metaData?.totals || { spend: 0, impressions: 0, reach: 0, clicks: 0, leads: 0, ctr: 0, cpc: 0, cpm: 0, cpl: 0, sales: 0, cps: 0 };
     const googleTotals = googleData?.totals || { spend: 0, impressions: 0, reach: 0, clicks: 0, leads: 0, ctr: 0, cpc: 0, cpm: 0, cpl: 0, sales: 0, cps: 0 };
-    
+
     const combinedRaw = {
       spend: metaTotals.spend + googleTotals.spend,
       impressions: metaTotals.impressions + googleTotals.impressions,
@@ -132,7 +132,7 @@ export default function Index() {
       leads: metaTotals.leads + googleTotals.leads,
       sales: (metaTotals.sales || 0) + (googleTotals.sales || 0),
     };
-    
+
     const combinedTotals = {
       ...combinedRaw,
       ctr: combinedRaw.impressions > 0 ? (combinedRaw.clicks / combinedRaw.impressions) * 100 : 0,
@@ -141,12 +141,12 @@ export default function Index() {
       cpl: combinedRaw.leads > 0 ? combinedRaw.spend / combinedRaw.leads : 0,
       cps: combinedRaw.sales > 0 ? combinedRaw.spend / combinedRaw.sales : 0,
     };
-    
+
     // Combine sparkline data by date
     const metaSparkline = metaData?.sparklineData || [];
     const googleSparkline = googleData?.sparklineData || [];
     const sparklineMap = new Map<string, any>();
-    
+
     [...metaSparkline, ...googleSparkline].forEach(point => {
       const existing = sparklineMap.get(point.date);
       if (existing) {
@@ -163,9 +163,9 @@ export default function Index() {
         sparklineMap.set(point.date, { ...point });
       }
     });
-    
+
     const combinedSparkline = Array.from(sparklineMap.values()).sort((a, b) => a.date.localeCompare(b.date));
-    
+
     return {
       campaigns: combinedCampaigns,
       totals: combinedTotals,
@@ -179,19 +179,19 @@ export default function Index() {
   const comparisonData = useMemo(() => {
     const hasMeta = dataSources.includes("meta");
     const hasGoogle = dataSources.includes("google");
-    
+
     if (hasMeta && !hasGoogle) return metaComparisonData;
     if (hasGoogle && !hasMeta) return googleComparisonData;
-    
+
     if (!metaComparisonData && !googleComparisonData) return null;
-    
+
     const metaCampaigns = metaComparisonData?.campaigns || [];
     const googleCampaigns = googleComparisonData?.campaigns || [];
     const combinedCampaigns = [...metaCampaigns, ...googleCampaigns];
-    
+
     const metaTotals = metaComparisonData?.totals || { spend: 0, impressions: 0, reach: 0, clicks: 0, leads: 0, ctr: 0, cpc: 0, cpm: 0, cpl: 0, sales: 0, cps: 0 };
     const googleTotals = googleComparisonData?.totals || { spend: 0, impressions: 0, reach: 0, clicks: 0, leads: 0, ctr: 0, cpc: 0, cpm: 0, cpl: 0, sales: 0, cps: 0 };
-    
+
     const combinedRaw = {
       spend: metaTotals.spend + googleTotals.spend,
       impressions: metaTotals.impressions + googleTotals.impressions,
@@ -200,7 +200,7 @@ export default function Index() {
       leads: metaTotals.leads + googleTotals.leads,
       sales: (metaTotals.sales || 0) + (googleTotals.sales || 0),
     };
-    
+
     return {
       campaigns: combinedCampaigns,
       totals: {
@@ -274,7 +274,7 @@ export default function Index() {
         localStorage.removeItem('google_ads_comparison_cache');
       }
       prevDateRangeKeyRef.current = dateRangeKey;
-      
+
       // Fetch from appropriate sources
       if (shouldFetchMeta && activeMetaIntegration?.id) {
         fetchMetaData(dateRange, false, comparisonEnabled);
@@ -312,26 +312,26 @@ export default function Index() {
   // Filter campaigns by selected statuses, objectives and search query
   const filterCampaigns = useCallback((campaigns: CampaignData[] | undefined) => {
     if (!campaigns) return [];
-    
+
     const query = filters.searchQuery.toLowerCase().trim();
-    
+
     return campaigns
-      .filter((campaign) => 
+      .filter((campaign) =>
         (filters.selectedStatuses.length === 0 || filters.selectedStatuses.includes(campaign.status as CampaignStatus)) &&
         (filters.selectedObjectives.length === 0 || filters.selectedObjectives.includes(campaign.objective as CampaignObjective))
       )
       .map((campaign): CampaignData | null => {
         // Check if campaign name matches
         const campaignMatches = campaign.name.toLowerCase().includes(query);
-        
+
         // Filter adsets that match or have ads that match
         const filteredAdsets = campaign.adsets
           .map((adset) => {
             const adsetMatches = adset.name.toLowerCase().includes(query);
-            const filteredAds = adset.ads.filter((ad) => 
+            const filteredAds = adset.ads.filter((ad) =>
               ad.name.toLowerCase().includes(query)
             );
-            
+
             // Include adset if it matches, any ad matches, or no search query
             if (!query || adsetMatches || filteredAds.length > 0) {
               return {
@@ -356,7 +356,7 @@ export default function Index() {
   }, [filters.selectedStatuses, filters.selectedObjectives, filters.searchQuery]);
 
   const filteredCampaigns = useMemo(() => filterCampaigns(data?.campaigns), [filterCampaigns, data?.campaigns]);
-  
+
   // Apply same filters to comparison campaigns
   const filteredComparisonCampaigns = useMemo(() => filterCampaigns(comparisonData?.campaigns), [filterCampaigns, comparisonData?.campaigns]);
 
@@ -397,7 +397,7 @@ export default function Index() {
   };
 
   const filteredTotals = useMemo(() => calculateTotals(filteredCampaigns), [filteredCampaigns]);
-  
+
   // Calculate comparison totals from filtered comparison campaigns (consistent filtering)
   const filteredComparisonTotals = useMemo(() => calculateTotals(filteredComparisonCampaigns), [filteredComparisonCampaigns]);
 
@@ -414,7 +414,7 @@ export default function Index() {
   // Transform sparkline data for KPI cards
   const sparklineArrays = useMemo(() => {
     if (!data?.sparklineData) return {};
-    
+
     return {
       spend: data.sparklineData.map((d) => d.spend),
       impressions: data.sparklineData.map((d) => d.impressions),
@@ -492,9 +492,9 @@ export default function Index() {
   };
 
   // Detect dominant objective using hook
-  const { 
-    dominantObjective, 
-    dominantConfig: objectiveConfig, 
+  const {
+    dominantObjective,
+    dominantConfig: objectiveConfig,
     breakdown: objectiveBreakdown,
     isMixed: hasMultipleObjectives,
   } = useDominantObjective(filteredCampaigns);
@@ -504,15 +504,15 @@ export default function Index() {
   // Transform data for performance chart with dynamic metrics
   const chartData = useMemo((): PerformanceData[] => {
     if (!filteredCampaigns.length) return [];
-    
+
     const adsetData: PerformanceData[] = [];
-    
+
     for (const campaign of filteredCampaigns) {
       for (const adset of campaign.adsets) {
         const ctr = adset.impressions > 0 ? (adset.clicks / adset.impressions) * 100 : 0;
         const cpc = adset.clicks > 0 ? adset.spend / adset.clicks : 0;
         const cpl = adset.leads > 0 ? adset.spend / adset.leads : 0;
-        
+
         adsetData.push({
           name: adset.name.length > 20 ? adset.name.substring(0, 20) + "..." : adset.name,
           clicks: adset.clicks,
@@ -526,7 +526,7 @@ export default function Index() {
         });
       }
     }
-    
+
     // Sort by primary metric
     const primaryKey = chartMetrics.metric1.key;
     return adsetData
@@ -539,7 +539,7 @@ export default function Index() {
 
   // Top 5 Conjuntos - Menor CPL (mínimo de leads para relevância estatística)
   const topAdsetsByCPL = useMemo(() => {
-    const adsets = filteredCampaigns.flatMap(c => 
+    const adsets = filteredCampaigns.flatMap(c =>
       c.adsets.filter(a => a.leads >= minLeadsThreshold)
     );
     return adsets
@@ -557,14 +557,14 @@ export default function Index() {
 
   // Total adsets available for CPL ranking
   const totalAdsetsForCPL = useMemo(() => {
-    return filteredCampaigns.flatMap(c => 
+    return filteredCampaigns.flatMap(c =>
       c.adsets.filter(a => a.leads >= minLeadsThreshold)
     ).length;
   }, [filteredCampaigns, minLeadsThreshold]);
 
   // Top 5 Conjuntos - Maior CTR (mínimo de leads para relevância estatística)
   const topAdsetsByCTR = useMemo(() => {
-    const adsets = filteredCampaigns.flatMap(c => 
+    const adsets = filteredCampaigns.flatMap(c =>
       c.adsets.filter(a => a.leads >= minLeadsThreshold)
     );
     return adsets
@@ -582,14 +582,14 @@ export default function Index() {
 
   // Total adsets available for CTR ranking
   const totalAdsetsForCTR = useMemo(() => {
-    return filteredCampaigns.flatMap(c => 
+    return filteredCampaigns.flatMap(c =>
       c.adsets.filter(a => a.leads >= minLeadsThreshold)
     ).length;
   }, [filteredCampaigns, minLeadsThreshold]);
 
   // Top 5 Criativos - Menor CPL (mínimo de leads para relevância estatística)
   const topAdsByCPL = useMemo(() => {
-    const ads = filteredCampaigns.flatMap(c => 
+    const ads = filteredCampaigns.flatMap(c =>
       c.adsets.flatMap(a => a.ads.filter(ad => ad.leads >= minLeadsThreshold))
     );
     return ads
@@ -607,14 +607,14 @@ export default function Index() {
 
   // Total ads available for CPL ranking
   const totalAdsForCPL = useMemo(() => {
-    return filteredCampaigns.flatMap(c => 
+    return filteredCampaigns.flatMap(c =>
       c.adsets.flatMap(a => a.ads.filter(ad => ad.leads >= minLeadsThreshold))
     ).length;
   }, [filteredCampaigns, minLeadsThreshold]);
 
   // Top 5 Criativos - Maior CTR (mínimo de leads para relevância estatística)
   const topAdsByCTR = useMemo(() => {
-    const ads = filteredCampaigns.flatMap(c => 
+    const ads = filteredCampaigns.flatMap(c =>
       c.adsets.flatMap(a => a.ads.filter(ad => ad.leads >= minLeadsThreshold))
     );
     return ads
@@ -632,7 +632,7 @@ export default function Index() {
 
   // Total ads available for CTR ranking
   const totalAdsForCTR = useMemo(() => {
-    return filteredCampaigns.flatMap(c => 
+    return filteredCampaigns.flatMap(c =>
       c.adsets.flatMap(a => a.ads.filter(ad => ad.leads >= minLeadsThreshold))
     ).length;
   }, [filteredCampaigns, minLeadsThreshold]);
@@ -654,16 +654,16 @@ export default function Index() {
     return value.toString();
   };
 
-  const activeFiltersCount = 
-    (filters.selectedStatuses.length < 2 ? 2 - filters.selectedStatuses.length : 0) + 
+  const activeFiltersCount =
+    (filters.selectedStatuses.length < 2 ? 2 - filters.selectedStatuses.length : 0) +
     (filters.selectedObjectives.length < 6 ? 6 - filters.selectedObjectives.length : 0) +
-    (filters.searchQuery ? 1 : 0) + 
+    (filters.searchQuery ? 1 : 0) +
     (comparisonEnabled ? 1 : 0);
 
   // Calculate comparison percentages using consistently filtered data
   const changes = useMemo(() => {
     if (!comparisonEnabled || !comparisonData || filteredComparisonCampaigns.length === 0) return null;
-    
+
     return {
       spend: calculatePercentChange(filteredTotals.spend, filteredComparisonTotals.spend),
       impressions: calculatePercentChange(filteredTotals.impressions, filteredComparisonTotals.impressions),
@@ -719,7 +719,7 @@ export default function Index() {
 
   // Acquisition funnel data
   const acquisitionFunnelData = useAcquisitionFunnel(filteredTotals, filteredCampaigns);
-  
+
   // Conversion rates for KPIs
   const conversionRates = useMemo(() => ({
     impressionToReach: getConversionRate(filteredTotals.reach, filteredTotals.impressions),
@@ -743,7 +743,7 @@ export default function Index() {
     reach: filteredTotals.reach,
     cpm: filteredTotals.cpm,
     goal: appSettings.periodGoals.monthly.leads || 0,
-    period: dateRange?.from && dateRange?.to 
+    period: dateRange?.from && dateRange?.to
       ? `${format(dateRange.from, 'dd/MM/yyyy')} - ${format(dateRange.to, 'dd/MM/yyyy')}`
       : "Período atual",
     previousPeriod: comparisonData && filteredComparisonTotals ? {
@@ -793,7 +793,7 @@ export default function Index() {
 
         {/* Controls Bar - Data Source, Refresh, DatePicker */}
         <div className="sticky top-14 md:top-16 z-40 w-full bg-background/95 backdrop-blur-sm border-b border-border/50">
-          <div className="container px-4 py-2 md:py-3">
+          <div className="w-full px-4 py-2 md:py-3">
             {/* Mobile: Stacked layout */}
             <div className="flex flex-col gap-2 md:hidden">
               {/* Row 1: Data Source + Refresh */}
@@ -809,10 +809,10 @@ export default function Index() {
                 )}
                 <div className="flex items-center gap-2 ml-auto">
                   {activeFiltersCount > 0 && (
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="icon"
-                      onClick={handleReset} 
+                      onClick={handleReset}
                       className="h-8 w-8 border-destructive/30 text-destructive hover:bg-destructive/10"
                     >
                       <RotateCcw className="h-4 w-4" />
@@ -852,10 +852,10 @@ export default function Index() {
                 {activeFiltersCount > 0 && (
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={handleReset} 
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleReset}
                         className="gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
                       >
                         <RotateCcw className="h-4 w-4" />
@@ -918,19 +918,19 @@ export default function Index() {
           )
         )}
 
-        <main className="container px-4 py-6 space-y-6">
+        <main className="w-full px-4 py-6 space-y-6">
 
           {/* No Integration Alert */}
           {!isLoading && activeProject && shouldFetchMeta && !activeMetaIntegration && (
-            <NoIntegrationAlert 
-              projectName={activeProject.name} 
-              integrationType="Meta Ads" 
+            <NoIntegrationAlert
+              projectName={activeProject.name}
+              integrationType="Meta Ads"
             />
           )}
           {!isLoading && activeProject && shouldFetchGoogle && !activeGoogleAdsIntegration && (
-            <NoIntegrationAlert 
-              projectName={activeProject.name} 
-              integrationType="Google Ads" 
+            <NoIntegrationAlert
+              projectName={activeProject.name}
+              integrationType="Google Ads"
             />
           )}
 
@@ -1048,8 +1048,8 @@ export default function Index() {
 
           {/* Ads Table */}
           {sectionVisibility.adsTable && (
-            <AdsTable 
-              campaigns={filteredCampaigns} 
+            <AdsTable
+              campaigns={filteredCampaigns}
               loading={isLoading}
               searchQuery={filters.searchQuery}
               onSearchChange={(value) => updateFilters({ searchQuery: value })}
